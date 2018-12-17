@@ -1,0 +1,2 @@
+dill==0.2.8.2
+kafka-python==1.4.4

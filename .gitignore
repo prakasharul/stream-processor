@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+/kafka-env/
 # C extensions
 *.so
 
