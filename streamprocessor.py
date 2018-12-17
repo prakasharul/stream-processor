@@ -6,11 +6,11 @@ import json
 class StreamProcessors():
 	'''kafka stream processors'''
 
-	def consumer(self, topic, **kwargs):
+	def consumer(self, topic, kwargs):
 		'''kafka consumer '''
 		_consumer = None
 		try:
-			kwargs["auto_offset_reset"] = 'latest' #latest # sma
+			kwargs["auto_offset_reset"] = 'smallest' #latest # smallest
 			kwargs["enable_auto_commit"]= True
 			kwargs['group_id'] = None
 
@@ -18,8 +18,6 @@ class StreamProcessors():
 			
 			if _consumer:
 				print("[+] kafka consumer connected sucessfully")
-				for msg in _consumer:
-					print(msg)
 		except KafkaError as e:
 			print("[-] kafka consumer failed to connect")
 			print(str(e))	
@@ -50,4 +48,19 @@ class StreamProcessors():
 		except (KafkaError, Exception) as e:
 			print("[-] message send failed")
 			print(str(e))
+
+	
+	def kafka_json(self, data):
+	    '''convert kafka record to json'''
+	    json = {}
+	    print()
+	    decoded_value = data.value.decode('utf-8')
+	    data_list = decoded_value.split(",")
+	    for item in data_list:
+	        try:
+	            key_value = item.split("=")
+	            json[key_value[0].strip(" ")] = key_value[1].strip(" ")
+	        except IndexError:
+	            pass
+	    return json   		
 
