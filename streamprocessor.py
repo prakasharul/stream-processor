@@ -1,7 +1,8 @@
 from kafka import KafkaConsumer, KafkaProducer
 from kafka.errors import KafkaError
-from constants import VERSA_ANALYTICS_HOST
 import json
+
+from constants import VERSA_ANALYTICS_HOST
 
 class StreamProcessors():
 	'''kafka stream processors'''
@@ -10,7 +11,7 @@ class StreamProcessors():
 		'''kafka consumer '''
 		_consumer = None
 		try:
-			kwargs["auto_offset_reset"] = 'smallest' #latest # smallest
+			kwargs["auto_offset_reset"] = 'latest' #latest # smallest
 			kwargs["enable_auto_commit"]= True
 			kwargs['group_id'] = None
 
@@ -45,22 +46,21 @@ class StreamProcessors():
 			producer_instance.flush()
 			print("[+] message send successfully")
 			print("[+] message:" +str(message))
-		except (KafkaError, Exception) as e:
+		except (KafkaError,Exception) as ex:
 			print("[-] message send failed")
-			print(str(e))
+			print(str(ex))
 
 	
 	def kafka_json(self, data):
 	    '''convert kafka record to json'''
 	    json = {}
-	    print()
 	    decoded_value = data.value.decode('utf-8')
 	    data_list = decoded_value.split(",")
 	    for item in data_list:
 	        try:
 	            key_value = item.split("=")
 	            json[key_value[0].strip(" ")] = key_value[1].strip(" ")
-	        except IndexError:
-	            pass
+	        except IndexError as e:
+	            print(str(e))
 	    return json   		
 
