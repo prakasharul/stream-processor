@@ -1,7 +1,6 @@
 from kafka import KafkaConsumer, KafkaProducer
 from kafka.errors import KafkaError
 import json
-from logger import logger
 
 
 class StreamProcessors():
@@ -21,7 +20,6 @@ class StreamProcessors():
                 print("[+] kafka consumer connected sucessfully")
         except KafkaError as e:
             print("[-] kafka consumer failed to connect")
-            logger.exception(str(e))
             print(str(e))   
         finally:
             return _consumer
@@ -34,7 +32,6 @@ class StreamProcessors():
             if _producer:
                 print("[+] kafka producer connected sucessfully")
         except KafkaError as e:
-            logger.exception(str(e))
             print("[-] kafka producer connection failed")
             print(str(e))
         finally:
@@ -49,7 +46,6 @@ class StreamProcessors():
             print("[+] message send successfully")
             print("[+] message:" +str(message))
         except (KafkaError,Exception) as ex:
-            logger.exception(str(eX))
             print("[-] message send failed")
             print(str(ex))
 
@@ -64,7 +60,6 @@ class StreamProcessors():
                 key_value = item.split("=")
                 json[key_value[0].strip(" ")] = key_value[1].strip(" ")
             except IndexError as e:
-                # logger.exception(str(e))
                 print(str(e))
         return json         
 
